@@ -3,7 +3,7 @@ name: Process Text Files
 on:
   push:
     branches:
-      - main  # Setze hier den Branch ein, auf den die Action reagieren soll
+      - master  # Setze hier den Branch ein, auf den die Action reagieren soll
 
 jobs:
   build:
