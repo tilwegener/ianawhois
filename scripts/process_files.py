@@ -58,7 +58,7 @@ def main():
     
     with open(output_sql_file, 'w') as sql_file:
         for filename in os.listdir(directory):
-            if filename and filename.lower().endswith('.txt'):  # Überprüfe, ob es sich um eine .txt-Datei handelt
+            if filename:  # Überprüfe, ob es sich um eine .txt-Datei handelt
                 filepath = os.path.join(directory, filename)
                 if os.path.isfile(filepath):  # Stelle sicher, dass es sich um eine Datei handelt
                     data = parse_file(filepath)
