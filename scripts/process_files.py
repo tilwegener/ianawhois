@@ -44,7 +44,7 @@ def generate_sql(data):
     return sql
 
 def main():
-    directory = 'data'
+    directory = '.'
     output_sql_file = 'output.sql'
     
     with open(output_sql_file, 'w') as sql_file:
