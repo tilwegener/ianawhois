@@ -3,7 +3,7 @@ name: Process Text Files
 on:
   push:
     branches:
-      - master  # Setze hier den Branch ein, auf den die Action reagieren soll
+      - main  # Setze hier den Branch ein, auf den die Action reagieren soll
 
 jobs:
   build:
@@ -24,8 +24,25 @@ jobs:
     - name: Run processing script
       run: python scripts/process_files.py
 
+    - name: Check file size
+      run: |
+        echo "Checking file size..."
+        ls -alh output.sql
+        file_size=$(stat -c%s "output.sql")
+        echo "File size: $file_size bytes"
+
     - name: Upload SQL file
       uses: actions/upload-artifact@v3
       with:
         name: sql-file
         path: output.sql
+
+    - name: Commit and push SQL file
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git add output.sql
+        git commit -m "Add generated SQL file"
+        git push origin main
