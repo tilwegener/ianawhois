@@ -22,7 +22,7 @@ def parse_file(filepath):
         return ', '.join(m.strip() for m in matches) if matches else None
 
     return {
-        'domain': os.path.basename(filepath),
+        'domain': os.path.basename(filepath).lower(),
         'organisation': extract_field('organisation', content),
         'address': extract_multi_field('address', content),
         'contact_administrative_name': extract_field('name', content),
