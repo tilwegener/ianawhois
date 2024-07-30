@@ -18,6 +18,9 @@ jobs:
       with:
         python-version: '3.x'
 
+    - name: Create data directory
+      run: mkdir -p data
+
     - name: Run processing script
       run: python scripts/process_files.py
 
