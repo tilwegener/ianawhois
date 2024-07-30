@@ -1,18 +1,25 @@
 import os
 import re
+import sqlite3
+
+def escape_sql(value):
+    """Escapes single quotes and other problematic characters in SQL strings."""
+    if value is None:
+        return 'NULL'
+    value = value.replace("'", "''")  # Escape single quotes
+    return f"'{value}'"
 
 def parse_file(filepath):
     with open(filepath, 'r') as file:
         content = file.read()
-    
-    # Dummy-Implementierung der Parsing-Logik. Anpassungen sind erforderlich.
+
     def extract_field(label, content):
         match = re.search(f'{label}:\s*(.*?)(?=\n\S+:|$)', content, re.DOTALL)
-        return match.group(1).strip() if match else 'NULL'
+        return match.group(1).strip() if match else None
 
     def extract_multi_field(label, content):
         matches = re.findall(f'{label}:\s*(.*?)(?=\n\S+:|$)', content, re.DOTALL)
-        return ', '.join(m.strip() for m in matches) if matches else 'NULL'
+        return ', '.join(m.strip() for m in matches) if matches else None
 
     return {
         'domain': os.path.basename(filepath),
@@ -46,8 +53,8 @@ def generate_sql(data):
         domain, organisation, address, contact_administrative_name, contact_administrative_organisation, contact_administrative_address, contact_administrative_phone, contact_administrative_fax_no, contact_administrative_email,
         contact_technical_name, contact_technical_organisation, contact_technical_address, contact_technical_phone, contact_technical_fax_no, contact_technical_email, nserver, ds_rdata, whois, status, remarks, created, changed, source
     ) VALUES (
-        '{data['domain']}', '{data['organisation']}', '{data['address']}', '{data['contact_administrative_name']}', '{data['contact_administrative_organisation']}', '{data['contact_administrative_address']}', '{data['contact_administrative_phone']}', '{data['contact_administrative_fax_no']}', '{data['contact_administrative_email']}',
-        '{data['contact_technical_name']}', '{data['contact_technical_organisation']}', '{data['contact_technical_address']}', '{data['contact_technical_phone']}', '{data['contact_technical_fax_no']}', '{data['contact_technical_email']}', '{data['nserver']}', '{data['ds_rdata']}', '{data['whois']}', '{data['status']}', '{data['remarks']}', '{data['created']}', '{data['changed']}', '{data['source']}'
+        {escape_sql(data['domain'])}, {escape_sql(data['organisation'])}, {escape_sql(data['address'])}, {escape_sql(data['contact_administrative_name'])}, {escape_sql(data['contact_administrative_organisation'])}, {escape_sql(data['contact_administrative_address'])}, {escape_sql(data['contact_administrative_phone'])}, {escape_sql(data['contact_administrative_fax_no'])}, {escape_sql(data['contact_administrative_email'])},
+        {escape_sql(data['contact_technical_name'])}, {escape_sql(data['contact_technical_organisation'])}, {escape_sql(data['contact_technical_address'])}, {escape_sql(data['contact_technical_phone'])}, {escape_sql(data['contact_technical_fax_no'])}, {escape_sql(data['contact_technical_email'])}, {escape_sql(data['nserver'])}, {escape_sql(data['ds_rdata'])}, {escape_sql(data['whois'])}, {escape_sql(data['status'])}, {escape_sql(data['remarks'])}, {escape_sql(data['created'])}, {escape_sql(data['changed'])}, {escape_sql(data['source'])}
     );
     """
     return sql
