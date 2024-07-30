@@ -49,10 +49,16 @@ def main():
     
     with open(output_sql_file, 'w') as sql_file:
         for filename in os.listdir(directory):
-            if filename.endswith('.txt'):
+            if filename:  # Überprüfe, ob der Dateiname nicht leer ist
                 filepath = os.path.join(directory, filename)
-                data = parse_file(filepath)
-                sql_file.write(generate_sql(data))
+                if os.path.isfile(filepath):  # Stelle sicher, dass es sich um eine Datei handelt
+                    data = parse_file(filepath)
+                    sql_content = generate_sql(data)
+                    
+                    # Debugging-Ausgabe
+                    print(f"Writing to file: {sql_content}")
+                    
+                    sql_file.write(sql_content)
 
 if __name__ == "__main__":
     main()
